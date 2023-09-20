@@ -17,7 +17,6 @@ import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 import math
-import tkinter as tk
 import sys
 from tkinter import colorchooser
 def start_drawing(event):
@@ -36,9 +35,10 @@ def on_button_click():
     color_code = colorchooser.askcolor(title="палитра цветов")
     fill1 = color_code[1]
     return color_code
-def choose_color(color):
-    canvas.config(bg=color)
-
+# def pour():
+#     global prev_x, prev_y
+#
+#     x, y = event.x, event.y
 root = tk.Tk()
 root.title("Заливка серией пикселов")
 
@@ -51,7 +51,8 @@ fill1 = 'black'
 canvas.bind("<Button-1>", start_drawing)  # Нажатие левой кнопки мыши
 canvas.bind("<B1-Motion>", draw)          # Движение мыши с нажатой кнопкой
 button = tk.Button(root, text="палитра цветов", command=on_button_click)
-
-# button.grid(row=2, column=1)
+# button.place(x=10, y=10, width=40, height=40)
 button.pack()
+# button = tk.Button(root, text="залить", command=pour)
+# button.pack()
 root.mainloop()
