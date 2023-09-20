@@ -18,8 +18,8 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 import math
 import tkinter as tk
-
-
+import sys
+from tkinter import colorchooser
 def start_drawing(event):
     global prev_x, prev_y
     prev_x, prev_y = event.x, event.y
@@ -28,9 +28,16 @@ def start_drawing(event):
 def draw(event):
     global prev_x, prev_y
     x, y = event.x, event.y
-    canvas.create_line(prev_x, prev_y, x, y, fill="black", width=2)
+    canvas.create_line(prev_x, prev_y, x, y, fill=fill1, width=2)
     prev_x, prev_y = x, y
 
+def on_button_click():
+    global fill1
+    color_code = colorchooser.askcolor(title="палитра цветов")
+    fill1 = color_code[1]
+    return color_code
+def choose_color(color):
+    canvas.config(bg=color)
 
 root = tk.Tk()
 root.title("Заливка серией пикселов")
@@ -38,8 +45,13 @@ root.title("Заливка серией пикселов")
 canvas = tk.Canvas(root, width=500, height=500)
 canvas.pack()
 
+fill1 = 'black'
+
 # Обработчики событий мыши
 canvas.bind("<Button-1>", start_drawing)  # Нажатие левой кнопки мыши
 canvas.bind("<B1-Motion>", draw)          # Движение мыши с нажатой кнопкой
-# canvas.Button()
+button = tk.Button(root, text="палитра цветов", command=on_button_click)
+
+# button.grid(row=2, column=1)
+button.pack()
 root.mainloop()
