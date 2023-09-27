@@ -68,33 +68,30 @@ def start_drawing(event):
 def draw(event):
     global prev_x, prev_y
     x, y = event.x, event.y
-    canvas.create(prev_x, prev_y, x, y, fill=fill1, width=2)
-    # Обновляем цвет пикселей в массиве
+    canvas.create_line(prev_x, prev_y, x, y, fill=fill1, width=2)
     for i in range(prev_x, x + 1):
         for j in range(prev_y, y + 1):
-            if 0 <= i < 500 and 0 <= j < 500:  # Убедитесь, что координаты в пределах холста
-                pixel_colors[j][i] = fill1  # Устанавливаем цвет пикселя
-
+            pixel_colors[i][j] = False
+            print(pixel_colors[i][j])
     prev_x, prev_y = x, y
 
 def pour(event):
     x, y = event.x, event.y
-    color = pixel_colors[y][x]
-    fill_area(x, y, color)
+    fill_area(x, y)
 
-def fill_area(x, y, color):
-    global prev_x, prev_y
+def fill_area(x, y):
+    color = pixel_colors[x][y]
+    print(color)
+    if (0 <= x < 500 and 0 <= y < 500 and color):
+        pixel_colors[x][y] = False
+        canvas.create_rectangle(x, y, x, y, fill=fill1, width=1)
+        fill_area(x + 1, y)
+        fill_area(x - 1, y)
+        fill_area(x, y + 1)
+        fill_area(x, y - 1)
 
-    canvas.create_line(prev_x, prev_y, x, y, fill=fill1, width=2)
 
-    if (0 <= x < 500 & 0 <= y < height & color != fill1):
-        pixel_colors[x][y] = fill1
-        color = pixel_colors[y][x]
-        fill_area(x + 1, y, color)
-        fill_area(x - 1, y, color)
-        fill_area(x, y + 1, color)
-        fill_area(x, y - 1, color)
-    prev_x, prev_y = x, y
+
 def on_button_click():
     global fill1
     color_code = colorchooser.askcolor(title="палитра цветов")
@@ -111,10 +108,9 @@ canvas = tk.Canvas(root, width=width, height=height)
 canvas.pack()
 
 fill1 = 'black'
-pixel_colors = [['white' for _ in range(500)] for _ in range(500)]
-# Обработчики событий мыши
-canvas.bind("<Button-1>", start_drawing)  # Нажатие левой кнопки мыши
-canvas.bind("<B1-Motion>", draw)          # Движение мыши с нажатой кнопкой
+pixel_colors = [[True for _ in range(500)] for _ in range(500)]
+canvas.bind("<Button-1>", start_drawing)
+canvas.bind("<B1-Motion>", draw)
 
 button = tk.Button(root, text="палитра цветов", command=on_button_click)
 button.pack()
