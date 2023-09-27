@@ -16,11 +16,15 @@ def draw_wu_line(x0, y0, x1, y1, color):
     dx = x1 - x0
     dy = y1 - y0
 
+    if dy == 0:
+        gradient = 0  # Избегаем деления на ноль
+    else:
+        gradient = dx / dy
+
     if abs(dx) > abs(dy):
         if x0 > x1:
             x0, x1, y0, y1 = x1, x0, y1, y0
 
-        gradient = dy / dx
         y = y0 + gradient
 
         for x in range(x0 + 1, x1):
@@ -33,7 +37,6 @@ def draw_wu_line(x0, y0, x1, y1, color):
         if y0 > y1:
             x0, x1, y0, y1 = x1, x0, y1, y0
 
-        gradient = dx / dy
         x = x0 + gradient
 
         for y in range(y0 + 1, y1):
@@ -42,10 +45,12 @@ def draw_wu_line(x0, y0, x1, y1, color):
             draw_point(int(x), y, intensity1)
             draw_point(int(x) + 1, y, intensity2)
             x += gradient
-
 def draw_point(x, y, intensity):
-    radius = 1
-    canvas.create_line(x - radius, y, x + radius, y, fill=fill1, width=4, smooth=tk.TRUE)
+    r = int(fill1[0] * intensity)
+    g = int(fill1[1] * intensity)
+    b = int(fill1[2] * intensity)
+    color_str = "#{:02x}{:02x}{:02x}".format(r, g, b)
+    canvas.create_line(x, y, x, y + 1, fill=color_str)
 
 def on_button_click():
     global fill1
@@ -58,7 +63,7 @@ root.title("Рисование линий (алгоритм ВУ)")
 canvas = tk.Canvas(root, width=500, height=500)
 canvas.pack()
 
-fill1 = 'black'
+fill1 = (0, 0, 0)  # Черный цвет (RGB)
 prev_x, prev_y = None, None
 drawing = False
 
